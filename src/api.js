@@ -18,7 +18,6 @@ const {
 const imgArr = ['png','jpg','jpeg','gif','bmp','webp'];
 
 
-const PinVerifier = require('./pinVerifier');
 var config = require('./config');
 var moment = require('moment');
 var reqx = new LoginRequest();
@@ -136,7 +135,6 @@ class LineAPI {
 			 this._getRSAKeyInfo(this.provider, (key, credentials) => {
 				 this.options.path = this.config.LINE_RS;
                  this.setTHttpClient(this.options);
-				 const rsaCrypto = pinVerifier.getRSACrypto(credentials);
 				 reqx.type = 0;
 				 reqx.identityProvider = this.provider;
 				 reqx.identifier = rsaCrypto.keyname;
