@@ -18,17 +18,6 @@ const imgArr = ['png','jpg','jpeg','gif','bmp','webp'];//DO NOT CHANGE THIS
 var komenTL = "AutoLike \nline://ti/p/~doninoob"; //Comment for timeline
 var bcText = "��J�s����r";
 var limitposts = '10'; //Output timeline post
-var express = require('express');
-var app = express();
-
-app.get('/', function (req, res) {
-  res.send('Hello World!');
-});
-
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
-});
-
 
 function isAdminOrBot(param) {
     return myBot.includes(param);
@@ -81,38 +70,37 @@ class LINE extends LineAPI {
 \n\
 🕵 Group 🕵\n\
 \n\
-🤖❂͜͡➣ maxkill:\n\
-🤖❂͜͡➣ ginfo：\n\
-🤖❂͜͡➣ tagall：\n\
+🤖❂͜͡➣ maxkill 翻群:\n\
+🤖❂͜͡➣ ginfo 群組信息：\n\
+🤖❂͜͡➣ tagall Tag所有用戶：\n\
 🤖❂͜͡➣ cancel：\n\
-🤖❂͜͡➣ gurl：\n\
-🤖❂͜͡➣ ourl：\n\
-🤖❂͜͡➣ curl：\n\
-🤖❂͜͡➣ left\n\
+🤖❂͜͡➣ gurl 群組邀請連結：\n\
+🤖❂͜͡➣ ourl 開啟群組連結：\n\
+🤖❂͜͡➣ curl 關閉群組連結：\n\
+🤖❂͜͡➣ left 離開\n\
 \n\
 🕵 Self 🕵\n\
 \n\
-🤖❂͜͡➣ addcontact\n\
-🤖❂͜͡➣ adminutil\n\
-🤖❂͜͡➣ grouputil\n\
-🤖❂͜͡➣ ban\n\
-🤖❂͜͡➣ unban\n\
-🤖❂͜͡➣ botcontact\n\
-🤖❂͜͡➣ botleft\n\
-🤖❂͜͡➣ broadcast\n\
+🤖❂͜͡➣ addcontact 添加好友\n\
+🤖❂͜͡➣ adminutil 管理員相關功能\n\
+🤖❂͜͡➣ grouputil 群組相關功能\n\
+🤖❂͜͡➣ ban Ban人\n\
+🤖❂͜͡➣ unban 解ban\n\
+🤖❂͜͡➣ botcontact 關於機器人\n\
+🤖❂͜͡➣ botleft 離開群組\n\
+🤖❂͜͡➣ broadcast 廣播\n\
 🤖❂͜͡➣ cekid\n\
 🤖❂͜͡➣ kepo\n\
 🤖❂͜͡➣ sendcontact\n\
-🤖❂͜͡➣ msg\n\
-🤖❂͜͡➣ mute\n\
-🤖❂͜͡➣ unmute\n\
-🤖❂͜͡➣ myid\n\
-🤖❂͜͡➣ refresh\n\
-🤖❂͜͡➣ speed|sp|.sp\n\
-🤖❂͜͡➣ test\n\
-🤖❂͜͡➣ tts\n\
-🤖❂͜͡➣ now\n\
-🤖❂͜͡➣ gift\n\
+🤖❂͜͡➣ msg 送信\n\
+🤖❂͜͡➣ mute 關閉機器人功能\n\
+🤖❂͜͡➣ unmute 開啟機器人功能\n\
+🤖❂͜͡➣ myid 查詢MID\n\
+🤖❂͜͡➣ refresh 重啟\n\
+🤖❂͜͡➣ speed|sp|.sp 測速\n\
+🤖❂͜͡➣ test 測試\n\
+🤖❂͜͡➣ now 現在時間\n\
+🤖❂͜͡➣ gift 禮物\n\
 🤖❂͜͡➣ youtube\n\
 \n\
 ʙʏ: sᴇʟғʙᴏᴛ-ʙʏ:Cang";
@@ -172,7 +160,6 @@ class LINE extends LineAPI {
 🤖❂͜͡➣ refresh\n\
 🤖❂͜͡➣ speed|sp|.sp\n\
 🤖❂͜͡➣ test\n\
-🤖❂͜͡➣ tts\n\
 🤖❂͜͡➣ now\n\
 🤖❂͜͡➣ gift\n\
 🤖❂͜͡➣ youtube\n\
@@ -1132,48 +1119,6 @@ Link Download: "+idU.id+"\n";
 				waitMsg = "yes";
 			    vx[0] = seq.from_;vx[1] = txt;
 			    this._sendMessage(seq,"Youtubeの動画リンクを送信してください\n# Link/cancel");
-				vx[2] = "arg1";
-			}else{
-				waitMsg = "no";vx[0] = "";vx[1] = "";vx[2] = "";vx[3] = "";
-				this._sendMessage(seq,"#CANCELLED");
-			}
-		}
-		
-		
-		if(vx[1] == "tts" && seq.from_ == vx[0] && waitMsg == "yes"){
-			if(vx[2] == "arg1"){
-				this._sendMessage(seq,"好的，發送文字");
-				vx[2] = "arg2";vx[3] = txt;
-			}else if(vx[2] == "arg2" && /^[A-Za-z0-9 ]+$/.test(textMessages)){
-				waitMsg = "no";vx[0] = "";vx[1] = "";vx[2] = "";
-				switch(vx[3]){
-					case 'id':
-					    this._textToSpeech(textMessages,"id",(res)=>{
-							this._sendFile(seq,res,3)
-						})
-						vx[3] = "";
-					break;
-					case 'en':
-					    this._textToSpeech(textMessages,"en",(res)=>{
-							this._sendFile(seq,res,3)
-						})
-						vx[3] = "";
-					break;
-					default:
-					    this._sendMessage(seq,"語言不明!");
-						vx[3] = "";
-					break;
-				}
-			}else if(vx[2] == "arg2"){
-				this._sendMessage(seq,"只允許字符：\nA-Z (no case sensitive)\n0-9 (number)");
-			}
-		}
-		if(txt == "tts" && isAdminOrBot(seq.from_)){
-			if(vx[2] == null || typeof vx[2] === "undefined" || !vx[2]){
-				waitMsg = "yes";
-			    vx[0] = seq.from_;vx[1] = txt;
-			    await this._sendMessage(seq,"Text to Speech adalah sebuah fitur dimana sebuah text dirubah menjadi sebuah suara.\nCara menggunakan: kirim text-nya yang akan dijadikan suara !");
-				this._sendMessage(seq,"Pilih bahasa:\n- Inggris = en\n- Indonesia = id");
 				vx[2] = "arg1";
 			}else{
 				waitMsg = "no";vx[0] = "";vx[1] = "";vx[2] = "";vx[3] = "";
