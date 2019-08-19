@@ -1,6 +1,5 @@
 const thrift = require('thrift-http');
 const unirest = require('unirest');
-const qrcode = require('qrcode-terminal');
 const util = require("util");
 const mime = require("mime");
 const fs = require('fs');
@@ -100,7 +99,6 @@ class LineAPI {
     return new Promise((resolve, reject) => {
     this._client.getAuthQrcode(true, 'THIRD-PC',(err, result) => {
       const qrcodeUrl = `line://au/q/${result.verifier}`;
-      qrcode.generate(qrcodeUrl,{small: true});
       console.info(`\n\nlink qr code is: ${qrcodeUrl}`)
       Object.assign(this.config.Headers,{ 'X-Line-Access': result.verifier });
         unirest.get('https://gd2.line.naver.jp/Q')

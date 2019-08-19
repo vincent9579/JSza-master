@@ -1,4 +1,3 @@
-const utf8 = require('utf8');
 const RSA = require('node-bignumber');
 
 class PinVerifier {
@@ -12,7 +11,6 @@ class PinVerifier {
     const chr = String.fromCharCode;
     const sessionKey = json.sessionKey;
     const message =
-      utf8.encode(chr(sessionKey.length) +
       sessionKey + chr(this.id.length) +
       this.id + chr(this.password.length) + this.password);
     rsa.setPublic(json.nvalue, json.evalue);
