@@ -58,6 +58,9 @@ class LINE extends LineAPI {
 		this.limitposts = limitposts; //Output timeline post
         this.receiverID = '';
         this.stateStatus = {
+			lockcancel: 0,
+			lockinvite: 0,
+			lockjoin: 0,
 			autojoin: 1, //0 = No, 1 = Yes
             cancel: 0, //0 = Auto cancel off, 1 = on
             kick: 1, //1 = Yes, 0 = No
@@ -214,6 +217,28 @@ class LINE extends LineAPI {
 			//this._client.sendMessage(0, halo);
 		}
 		
+		if(operation.type == 13 && this.stateStatus.lockinvite == 1) {
+            if(!isAdminOrBot(operation.param2)) {
+			this.cancelAll(operation.param1,[operation.param2]);
+			this._cancel(operation.param1,[operation.param2]);
+            this._kickMember(operation.param1,[operation.param2]);
+             }
+
+           }
+		
+		if(operation.type == 32 && this.stateStatus.lockcancel == 1) { //ada cancel
+          // op1 = group nya
+          // op2 = yang 'nge' cancel
+          // op3 = yang 'di' cancel
+          if(isAdminOrBot(operation.param3)) {
+              this._invite(operation.param1,[operation.param3]);
+          }
+          if(!isAdminOrBot(operation.param2)) {
+              this._kickMember(operation.param1,[operation.param2]);
+            }
+
+        }
+		
 		if(operation.type == 15 && isAdminOrBot(operation.param2)) {//ada yang leave
 		    let babay = new Message();
 			babay.to = operation.param1;
@@ -277,6 +302,13 @@ class LINE extends LineAPI {
 			seq.to = operation.param1;
 			this.textMessage("0103",seq,operation.param2,1);
 		}
+		
+		if(operation.type == 17 && this.stateStatus.lockjoin == 1) {
+            if(!isAdminOrBot(operation.param2) || !isStaffOrBot(operation.param2)) {
+            this._kickMember(operation.param1,[operation.param2]);
+             }
+
+           }
 
         if(operation.type == 13) { // diinvite
             if(this.stateStatus.autojoin == 1 || isAdminOrBot(operation.param2)) {
@@ -288,6 +320,13 @@ class LINE extends LineAPI {
             }
         }
         this.getOprationType(operation);
+    }
+	
+	async cancelAll(gid) {
+        let { listPendingInvite } = await this.searchGroup(gid);
+        if(listPendingInvite.length > 0){
+            this._cancel(gid,listPendingInvite);
+        }
     }
 	
 	async aLike(){
@@ -385,7 +424,7 @@ class LINE extends LineAPI {
 					}
                 }
             }
-            this._sendMessage(seq,`Status: \n${JSON.stringify(this.stateStatus)}`);
+//          this._sendMessage(seq,`Status: \n${JSON.stringify(this.stateStatus)}`);
 			this._sendMessage(seq,isinya);
         } else {
             this._sendMessage(seq,``);
@@ -507,6 +546,13 @@ class LINE extends LineAPI {
 		const cot = txt.split('@');
 		const com = txt.split(':');
 		const cox = txt.split(' ');
+		
+		if(txt == 'creator') {
+           this._sendMessage(seq, '作者：');
+           seq.contentType=13;
+           seq.contentMetadata = { mid: 'ub7bc6da6edce4f8a88ba50fc4432dda7' };
+           this._client.sendMessage(1, seq);
+        }
 		
 		if(vx[1] == "sendcontact" && seq.from_ == vx[0] && waitMsg == "yes"){
 			let panjang = txt.split("");
@@ -1403,7 +1449,7 @@ Link Download: "+idU.id+"\n";
 			this.setState(seq,1)
 		}
 		
-        const action = ['autojoin on','autojoin off','cancel on','cancel off','kick on','kick off','salam on','salam off','protect off','protect on','qr on','qr off']
+        const action = ['autojoin on','autojoin off','cancel on','cancel off','kick on','kick off','salam on','salam off','protect off','protect on','qr on','qr off','lockcancel on','lockcancel off','lockinvite on','lockinvite off','lockjoin on','lockjoin off']
         if(action.includes(txt)) {
             this.setState(seq,0)
         }
