@@ -9,14 +9,14 @@ const config = require('./config');
 const { Message, OpType, Location } = require('../curve-thrift/line_types');
 //let exec = require('child_process').exec;
 
-const myBot = ['ud93495f902f24be67199bc692e8d47b5','u6ce0ad1c7cb3ebcf3fc4922be1b25c64','ue4ec027e04365a48fc5e1a0651fc4a08','u49ac3674970b53f6a7a02afe32935619','u94f9b8357d7b74914a0e1cd917ad664c','ub1b5d73b89373cd3554f73519000edc5','ub266d0cfead8ab001c4942d0f5dcb604','u27009f25b102e56c85ad4f6cf8068f79','u3bf8d6701c2f66c6c95fa3d2640d05a1'];
-const admin = ['ud93495f902f24be67199bc692e8d47b5','u6ce0ad1c7cb3ebcf3fc4922be1b25c64','ue4ec027e04365a48fc5e1a0651fc4a08','u49ac3674970b53f6a7a02afe32935619','u94f9b8357d7b74914a0e1cd917ad664c','ub1b5d73b89373cd3554f73519000edc5','ub266d0cfead8ab001c4942d0f5dcb604','u27009f25b102e56c85ad4f6cf8068f79','u3bf8d6701c2f66c6c95fa3d2640d05a1'];
+const myBot = ['ud93495f902f24be67199bc692e8d47b5','ue4ec027e04365a48fc5e1a0651fc4a08','ub7bc6da6edce4f8a88ba50fc4432dda7'];
+const admin = ['ud93495f902f24be67199bc692e8d47b5','ue4ec027e04365a48fc5e1a0651fc4a08','ub7bc6da6edce4f8a88ba50fc4432dda7'];
 const banList = [];//Banned list
 var groupList = new Array();//Group list
 var vx = {};var midnornama,pesane,kickhim;var waitMsg = "no";//DO NOT CHANGE THIS
 const imgArr = ['png','jpg','jpeg','gif','bmp','webp'];//DO NOT CHANGE THIS
 var komenTL = "AutoLike \nline://ti/p/~doninoob"; //Comment for timeline
-var bcText = "��J�s����r";
+var bcText = "輸入廣播文字";
 var limitposts = '10'; //Output timeline post
 
 function isAdminOrBot(param) {
@@ -196,7 +196,7 @@ class LINE extends LineAPI {
 		if(operation.type == 16 && this.stateStatus.salam == 1){//join group
 			let halo = new Message();
 			halo.to = operation.param1;
-			halo.text = "Hai !!";
+			halo.text = "嗨";
 			this._client.sendMessage(0, halo);
 		}
 		
@@ -230,7 +230,7 @@ class LINE extends LineAPI {
 		if(operation.type == 5 && this.stateStatus.salam == 1) {//someone adding me..
             let halo = new Message();
 			halo.to = operation.param1;
-			halo.text = "安安";
+			halo.text = "安安，此為自動回應 無須理會";
 			this._client.sendMessage(0, halo);
         }
 
@@ -242,9 +242,9 @@ class LINE extends LineAPI {
 			kasihtau.to = operation.param1;
             if(isAdminOrBot(operation.param3)) {
 				this.textMessage("0105",kasihtau,operation.param3,1);
-                //this._inviteIntoGroup(operation.param1,operation.param3);
-				//kasihtau.text = "Jangan kick botku !";
-				//this._client.sendMessage(0, kasihtau);
+                this._inviteIntoGroup(operation.param1,operation.param3);
+				kasihtau.text = "別踢機器人";
+				this._client.sendMessage(0, kasihtau);
 				var kickhim = 'yes';
             }else if(!isAdminOrBot(operation.param3)){
 				this.textMessage("0106",kasihtau,operation.param3,1);
@@ -385,7 +385,7 @@ class LINE extends LineAPI {
 					}
                 }
             }
-            //this._sendMessage(seq,`Status: \n${JSON.stringify(this.stateStatus)}`);
+            this._sendMessage(seq,`Status: \n${JSON.stringify(this.stateStatus)}`);
 			this._sendMessage(seq,isinya);
         } else {
             this._sendMessage(seq,``);
@@ -436,9 +436,9 @@ class LINE extends LineAPI {
                         return mentionz;
                     })
 					mentionMemberx.push(mentionMember1);
-				    //const tag = {cmddata: { MENTION: `{"MENTIONEES":[${mentionMember}]}` }}
-				    //seq.contentMetadata = tag.cmddata;
-				    //this._client.sendMessage(0, seq);
+				    const tag = {cmddata: { MENTION: `{"MENTIONEES":[${mentionMember}]}` }}
+				    seq.contentMetadata = tag.cmddata;
+				    this._client.sendMessage(0, seq);
 				}else{
 				    let namanya = listMember[i].dn;
 				    let midnya = listMember[i].mid;
@@ -760,7 +760,7 @@ vx[0] = "";vx[1] = "";waitMsg = "no";vx[2] = "";vx[3] = "";
 			if(vx[2] == null || typeof vx[2] === "undefined" || !vx[2]){
 			    waitMsg = "yes";
 			    vx[0] = seq.from_;vx[1] = txt;vx[2] = "arg1";
-			    this._sendMessage(seq,"サーチ先を送信してください #contact/mention/mid/cancel");
+			    this._sendMessage(seq,"發送搜索的人 #contact/mention/mid/cancel");
 			}else{
 				waitMsg = "no";vx[0] = "";vx[1] = "";vx[2] = "";vx[3] = "";
 				this._sendMessage(seq,"#CANCELLED");
@@ -775,7 +775,7 @@ vx[0] = "";vx[1] = "";waitMsg = "no";vx[2] = "";vx[3] = "";
 				this._sendMessage(seq,"#CANCELLED");
 			}else if(vx[2] == "arg1" && vx[3] == "mid" && cot[1]){
 				let bang = new Message();bang.to = seq.to;
-				bang.text = "指名完了！\n送信するメッセージを送信してください"
+				bang.text = "指名完了！\n請發送"
 				this._client.sendMessage(0,bang);
 				let ment = seq.contentMetadata.MENTION;
 			    let xment = JSON.parse(ment);let pment = xment.MENTIONEES[0].M;
@@ -784,12 +784,12 @@ vx[0] = "";vx[1] = "";waitMsg = "no";vx[2] = "";vx[3] = "";
 				vx[2] = "arg2";
 			}else if(vx[2] == "arg1" && vx[3] == "mid" && seq.contentType == 13){
 				let midnya = seq.contentMetadata.mid;let bang = new Message();bang.to = seq.to;
-				bang.text = "指名完了！\n送信するメッセージを送信してください"
+				bang.text = "指名完了！\n請發送"
 				this._client.sendMessage(0,bang);
 				vx[4] = midnya;
 				vx[2] = "arg2";
 			}else if(vx[2] == "arg1" && vx[3] == "mid" && panjang.length > 30){
-				this._sendMessage(seq,"OK !, btw pesan-nya apa ?");
+				this._sendMessage(seq,"OK !, 順邊說說近況 ?");
 				vx[4] = txt;
 				vx[2] = "arg2";
 			}else if(vx[2] == "arg2" && vx[3] == "mid"){
@@ -814,7 +814,7 @@ vx[0] = "";vx[1] = "";waitMsg = "no";vx[2] = "";vx[3] = "";
 			}else{
 				let bang = new Message();
 				bang.to = seq.to;
-				bang.text = "メッセージ送信先を送信してください #contact/mention/mid\n\n「cancel」キャンセルできます";
+				bang.text = "請發送一則訊息 #contact/mention/mid\n\n「cancel」";
 				this._client.sendMessage(0,bang);
 			}
 		}if(txt == "msg" && isAdminOrBot(seq.from_)){
@@ -822,7 +822,7 @@ vx[0] = "";vx[1] = "";waitMsg = "no";vx[2] = "";vx[3] = "";
 			    waitMsg = "yes";
 			    vx[0] = seq.from_;vx[1] = txt;vx[3] = "mid";
 			    this._sendMessage(seq,"Mau kirim pesan ke siapa bang ?");
-				this._sendMessage(seq,"メッセージ送信先を送信してください #contact/mention/mid\n\n「cancel」キャンセルできます");
+				this._sendMessage(seq,"請發送一則訊息 #contact/mention/mid\n\n「cancel」");
 				vx[2] = "arg1";
 			}else{
 				waitMsg = "no";vx[0] = "";vx[1] = "";vx[2] = "";vx[3] = "";
@@ -841,7 +841,7 @@ vx[0] = "";vx[1] = "";waitMsg = "no";vx[2] = "";vx[3] = "";
 				let msg = new Message();msg.to = seq.to;
 				if(isBanned(banList,pment)){
 					waitMsg = "no";vx[0] = "";vx[1] = "";vx[2] = "";vx[3] = "";
-					msg.text = cot[1]+"は既に追加されています";
+					msg.text = cot[1]+"已添加";
 					this._client.sendMessage(0,msg);
 				}else{
 					msg.text = "追加完了！";
@@ -853,7 +853,7 @@ vx[0] = "";vx[1] = "";waitMsg = "no";vx[2] = "";vx[3] = "";
 				let midnya = seq.contentMetadata.mid;let msg = new Message();msg.to = seq.to;
 				if(isBanned(banList,midnya)){
 					waitMsg = "no";vx[0] = "";vx[1] = "";vx[2] = "";vx[3] = "";
-					msg.text = "既に追加されています";
+					msg.text = "已添加";
 					this._client.sendMessage(0, msg);
 				}else{
 					msg.text = "追加完了！";
@@ -864,7 +864,7 @@ vx[0] = "";vx[1] = "";waitMsg = "no";vx[2] = "";vx[3] = "";
 			}else if(panjang.length > 30 && panjang[0] == "u"){
 				if(isBanned(banList,txt)){
 					waitMsg = "no";vx[0] = "";vx[1] = "";vx[2] = "";vx[3] = "";
-					this._sendMessage(seq,"既に追加されています");
+					this._sendMessage(seq,"已添加");
 				}else{
 					let msg = new Message();msg.to = seq.to;msg.text = "追加完了！";
 					this._client.sendMessage(0, msg);
@@ -878,9 +878,9 @@ vx[0] = "";vx[1] = "";waitMsg = "no";vx[2] = "";vx[3] = "";
 			if(vx[2] == null || typeof vx[2] === "undefined" || !vx[2]){
 			    waitMsg = "yes";
 			    vx[0] = seq.from_;vx[1] = txt;
-			    this._sendMessage(seq,"ブラックリストにユーザーを追加します");
+			    this._sendMessage(seq,"將用戶添加到黑名單");
 				vx[2] = "arg1";
-				this._sendMessage(seq,"ブラック追加をしたい人を指名してください\n#contact/mention/mid\n\n「cancel」キャンセルできます");
+				this._sendMessage(seq,"請指定\n#contact/mention/mid\n\n「cancel」");
 			}else{
 				waitMsg = "no";vx[0] = "";vx[1] = "";vx[2] = "";vx[3] = "";
 				this._sendMessage(seq,"#CANCELLED");
@@ -898,11 +898,11 @@ vx[0] = "";vx[1] = "";waitMsg = "no";vx[2] = "";vx[3] = "";
 				switch(txt){
 					case 'add':
 					    vx[2] = "arg2";vx[3] = txt;
-					    this._sendMessage(seq,"権限追加をしたい人を指名してください\n#contact/mention/mid\n\n「cancel」キャンセルできます");
+					    this._sendMessage(seq,"請指定\n#contact/mention/mid\n\n「cancel」");
 					break;
 					case 'del':
 					    vx[2] = "arg2";vx[3] = txt;xtxt = "「 Admin List 」\n\n";
-					    await this._sendMessage(seq,"権限削除したい人の番号を指定してください");
+					    await this._sendMessage(seq,"請選擇編號 即可移除");
 						for(var i=0; i < myBot.length; i++){
 							let numb = i+1;
 							let xcontact = await this._client.getContact(myBot[i]);
@@ -933,7 +933,7 @@ vx[0] = "";vx[1] = "";waitMsg = "no";vx[2] = "";vx[3] = "";
 					let msg = new Message();msg.to = seq.to;
 					if(isAdminOrBot(pment)){
 						waitMsg = "no";vx[0] = "";vx[1] = "";vx[2] = "";vx[3] = "";
-						msg.text = cot[1]+"は既に追加されています！";
+						msg.text = cot[1]+"已添加！";
 						this._client.sendMessage(0,msg);
 					}else{
 						msg.text = "Done !";
@@ -945,7 +945,7 @@ vx[0] = "";vx[1] = "";waitMsg = "no";vx[2] = "";vx[3] = "";
 					let midnya = seq.contentMetadata.mid;let msg = new Message();msg.to = seq.to;
 					if(isAdminOrBot(midnya)){
 						waitMsg = "no";vx[0] = "";vx[1] = "";vx[2] = "";vx[3] = "";
-						msg.text = "既に追加されています！";
+						msg.text = "已添加！";
 						this._client.sendMessage(0, msg);
 					}else{
 						msg.text = "追加完了！";
@@ -956,7 +956,7 @@ vx[0] = "";vx[1] = "";waitMsg = "no";vx[2] = "";vx[3] = "";
 				}else if(panjang.length > 30 && panjang[0] == "u"){
 					if(isAdminOrBot(txt)){
 						waitMsg = "no";vx[0] = "";vx[1] = "";vx[2] = "";vx[3] = "";
-						this._sendMessage(seq,"は既に追加されています");
+						this._sendMessage(seq,"已添加！");
 					}else{
 						let msg = new Message();msg.to = seq.to;msg.text = "追加完了！";
 						this._client.sendMessage(0, msg);
@@ -969,9 +969,9 @@ vx[0] = "";vx[1] = "";waitMsg = "no";vx[2] = "";vx[3] = "";
 				let ment = txt-1;
 				if (ment > myBot.length) {
                	    myBot.splice(ment, 1);
-					this._sendMessage(seq,"Berhasil !");
+					this._sendMessage(seq,"成功 !");
                 }else{
-					this._sendMessage(seq,"Admin tidak ada !");
+					this._sendMessage(seq,"管理員不存在 !");
 				}
 			}
 		}
@@ -980,7 +980,7 @@ vx[0] = "";vx[1] = "";waitMsg = "no";vx[2] = "";vx[3] = "";
 			    waitMsg = "yes";
 			    vx[0] = seq.from_;vx[1] = txt;
 				vx[2] = "arg1";
-				this._sendMessage(seq,"「 Admin権限管理システム 」\n\n- 権限追加 = add\n- 権限削除 = del\n- 権限者一覧 = list\n\n- 終了 = cancel");
+				this._sendMessage(seq,"「 Admin権限管理 」\n\n- 権限追加 = add\n- 権限削除 = del\n- 権限者一覧 = list\n\n- 終了 = cancel");
 			}else{
 				waitMsg = "no";vx[0] = "";vx[1] = "";vx[2] = "";vx[3] = "";
 				this._sendMessage(seq,"#CANCELLED");
@@ -1006,7 +1006,7 @@ vx[0] = "";vx[1] = "";waitMsg = "no";vx[2] = "";vx[3] = "";
 					bang.text = "削除完了！";
 					this._client.sendMessage(0,bang);
 				}else{
-					bang.text = "ブラックリストユーザーではありません";
+					bang.text = "非黑單用戶";
 					this._client.sendMessage(0, bang);
 				}
 			}else if(seq.contentType == 13){
@@ -1020,7 +1020,7 @@ vx[0] = "";vx[1] = "";waitMsg = "no";vx[2] = "";vx[3] = "";
 					bang.text = "削除完了！";
 					this._client.sendMessage(0,bang);
 				}else{
-					bang.text = "ブラックリストユーザーではありません";
+					bang.text = "非黑單用戶";
 					this._client.sendMessage(0, bang);
 				}
 			}else if(panjang.length > 30 && panjang[0] == "u"){
@@ -1034,7 +1034,7 @@ vx[0] = "";vx[1] = "";waitMsg = "no";vx[2] = "";vx[3] = "";
 					bang.text = "削除完了！";
 					this._client.sendMessage(0,bang);
 				}else{
-					this._sendMessage(seq,"ブラックリストユーザーではありません");
+					this._sendMessage(seq,"非黑單用戶");
 				}
 			}else{
 			}
@@ -1049,7 +1049,7 @@ vx[0] = "";vx[1] = "";waitMsg = "no";vx[2] = "";vx[3] = "";
 				    seq.text += "\n-["+orangnya[0].mid+"]["+orangnya[0].displayName+"]";
 				}
 				this._sendMessage(seq,seq.text);
-			    this._sendMessage(seq,"ブラックから削除をしたい人を指名してください\n#contact/mention/mid\n\n「cancel」キャンセルできます");
+			    this._sendMessage(seq,"請指定刪除的人\n#contact/mention/mid\n\n「cancel」");
 				vx[2] = "arg1";
 			}else{
 				waitMsg = "no";vx[0] = "";vx[1] = "";vx[2] = "";vx[3] = "";
@@ -1058,7 +1058,7 @@ vx[0] = "";vx[1] = "";waitMsg = "no";vx[2] = "";vx[3] = "";
 		}
 		
 		if(txt == "banlist" && isAdminOrBot(seq.from_)){
-			seq.text = "⇗ブラックリスト⇙\n[Mid] [Name]\n\n";
+			seq.text = "⇗黑名單⇙\n[Mid] [Name]\n\n";
 			for(var i = 0; i < banList.length; i++){
 			    let orangnya = await this._getContacts([banList[i]]);
 				seq.text += "["+orangnya[0].mid+"]["+orangnya[0].displayName+"]\n";
@@ -1096,7 +1096,7 @@ vx[0] = "";vx[1] = "";waitMsg = "no";vx[2] = "";vx[3] = "";
              	  .catch(function (err) {
            	    });
 				if(hasil == "Error: no_media_found"){
-			    	infDl.text = "Gagal bang !, mungkin url-nya salah...";
+			    	infDl.text = "失敗";
 				}else{
 					let title = hasil.title;
 					let urls = hasil.urls;
@@ -1116,7 +1116,7 @@ Link Download: "+idU.id+"\n";
 			if(vx[2] == null || typeof vx[2] === "undefined" || !vx[2]){
 				waitMsg = "yes";
 			    vx[0] = seq.from_;vx[1] = txt;
-			    this._sendMessage(seq,"Youtubeの動画リンクを送信してください\n# Link/cancel");
+			    this._sendMessage(seq,"發送Youtube連結\n# Link/cancel");
 				vx[2] = "arg1";
 			}else{
 				waitMsg = "no";vx[0] = "";vx[1] = "";vx[2] = "";vx[3] = "";
@@ -1130,7 +1130,7 @@ Link Download: "+idU.id+"\n";
 				this._sendMessage(seq,"#CANCELLED");
 			}else if(txt == "group" && vx[2] == "arg1"){
 				vx[3] = txt;
-				this._sendMessage(seq,"OK, Apa nama groupnya bang ?");
+				this._sendMessage(seq,"OK...?");
 				vx[2] = "arg2";
 			}else if(vx[3] == "group" && vx[2] == "arg2"){
 				vx[0] = "";vx[1] = "";waitMsg = "no";vx[2] = "";vx[3] = "";
@@ -1141,7 +1141,7 @@ Link Download: "+idU.id+"\n";
 			if(vx[2] == null || typeof vx[2] === "undefined" || !vx[2]){
 				waitMsg = "yes";
 			    vx[0] = seq.from_;vx[1] = txt;
-			    this._sendMessage(seq,"Left dari ? #group");
+			    this._sendMessage(seq,"離開了 ? #group");
 				vx[2] = "arg1";
 			}else{
 				waitMsg = "no";vx[0] = "";vx[1] = "";vx[2] = "";vx[3] = "";
@@ -1151,7 +1151,7 @@ Link Download: "+idU.id+"\n";
 		
 		if(txt == "mute" && isAdminOrBot(seq.from_)){
 			this.stateStatus.mute = 1;
-			this._sendMessage(seq,"コマンドの反応をオフにしました。\n※unmuteでオンに出来ます！")
+			this._sendMessage(seq,"已關閉命令\n※unmute解除")
 		}
 
 		if(vx[1] == "grouputil" && seq.from_ == vx[0] && waitMsg == "yes"){
@@ -1178,7 +1178,7 @@ Link Download: "+idU.id+"\n";
 				break;
 				case 'ticket':
 				    vx[2] = "arg2";vx[3] = "ticket";M.to = seq.to;groupList = [];
-					M.text = "Pilih nomor group dibawah ini !";
+					M.text = "選擇下面的組號！";
 					await this._client.sendMessage(0, M);
 					listGroups.forEach(function(item, index, array) {
 					  groupList.push(item);
@@ -1206,7 +1206,7 @@ Link Download: "+idU.id+"\n";
 					}
 					const groupUrl = await this._reissueGroupTicket(groupList[txt - 1]);
 					this._sendMessage(seq,"Line Group -> line://ti/g/"+groupUrl);
-				}else{this._sendMessage(seq,"Group tidak ada !");}
+				}else{this._sendMessage(seq,"找不到群組");}
 			}
 		}
 		if(txt == "grouputil" && isAdminOrBot(seq.from_)){
@@ -1240,7 +1240,7 @@ Link Download: "+idU.id+"\n";
 	}
 		
 		if(txt == "refresh" && isAdminOrBot(seq.from_)){
-			this._sendMessage(seq, "Clean all message....");
+			this._sendMessage(seq, "清除中....");
 			await this._client.removeAllMessages();
 			this._sendMessage(seq, "Done !");
 		}
@@ -1463,8 +1463,8 @@ Link Download: "+idU.id+"\n";
             if(updateGroup.preventJoinByTicket === true) {
                 updateGroup.preventJoinByTicket = false;
 				await this._updateGroup(updateGroup);
-				seq.text = "許可しました！";
-	    }else{seq.text = "既に許可されています！";}
+				seq.text = "已允許";
+	    }else{seq.text = "已經被允許了！";}
 	    this._sendMessage(seq,seq.text);
 			const groupUrl = await this._reissueGroupTicket(seq.to)
             this._sendMessage(seq,`line://ti/g/${groupUrl}`);
@@ -1474,8 +1474,8 @@ Link Download: "+idU.id+"\n";
             if(updateGroup.preventJoinByTicket === false) {
                 updateGroup.preventJoinByTicket = true;
 				await this._updateGroup(updateGroup);
-				seq.text = "ブロックしました！";
-            }else{seq.text = "既にブロックされています！";}
+				seq.text = "它已被封鎖！";
+            }else{seq.text = "已被封鎖！";}
             this._sendMessage(seq,seq.text);
         }else if(joinByUrl.includes(txt) && txt == "ourl" && isAdminOrBot(seq.from_)) {
             this._sendMessage(seq,`リンク/QRコードを使用したグループ招待を許可します…`);
@@ -1483,8 +1483,8 @@ Link Download: "+idU.id+"\n";
 	    if(updateGroup.preventJoinByTicket === true) {
 		updateGroup.preventJoinByTicket = false;
 				await this._updateGroup(updateGroup);
-				seq.text = "許可しました！";
-	    }else{seq.text = "既に許可されています！";}
+				seq.text = "已允許";
+	    }else{seq.text = "已經被允許了！";}
 	    this._sendMessage(seq,seq.text);
 	}
 		
@@ -1533,7 +1533,7 @@ Link Download: "+idU.id+"\n";
             await this._acceptGroupInvitationByTicket(id,ticketId);
         }*/
 
-        /*if(cmd === 'ip') {
+        if(cmd === 'ip') {
             exec(`curl ipinfo.io/${payload}`,(err, res) => {
                 const result = JSON.parse(res);
                 if(typeof result.error == 'undefined') {
@@ -1559,10 +1559,10 @@ Link Download: "+idU.id+"\n";
                         this._sendMessage(seq,'Not Found');
                     }
                 } else {
-                    this._sendMessage(seq,'Location Not Found , Maybe di dalem goa');
+                    this._sendMessage(seq,'找不到位置');
                 }
             })
-        }*/
+        }
     }
 
 }
