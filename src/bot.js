@@ -24,13 +24,13 @@ Thanks to @Alfathdirk @TCR_TEAM\n\
 | Change it to your authToken / your email & password
 */
 const auth = {
-	authToken: '',
+	authToken: 'EIUQhzUYBkZVnILN1j95.2tsv/qlYs/zXMBXPlO1hTq.CYUEqCC8C9hGjiNbWckGTdUMdtZFIoVd5GsT+EaBCBg=',
 	certificate: '',
 	email: '',
 	password: ''
 }
 
-let client =  new LineConnect();
+let client =  new LineConnect(auth);
 //let client =  new LineConnect(auth);
 
 client.startx().then(async (res) => {

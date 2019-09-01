@@ -62,8 +62,8 @@ class LINE extends LineAPI {
 			lockinvite: 0,
 			lockjoin: 0,
 			autojoin: 1, //0 = No, 1 = Yes
-            cancel: 0, //0 = Auto cancel off, 1 = on
-            kick: 1, //1 = Yes, 0 = No
+            lockupdategroup: 0, //0 =lockupdategroup off, 1 = on
+            kick: 0, //1 = Yes, 0 = No
 			mute: 0, //1 = Mute, 0 = Unmute
 			protect: 0, //Protect Qr,Kicker
 			qr: 0, //0 = Gk boleh, 1 = Boleh
@@ -76,7 +76,7 @@ class LINE extends LineAPI {
 🤖❂͜͡➣ maxkill 翻群:\n\
 🤖❂͜͡➣ ginfo 群組信息：\n\
 🤖❂͜͡➣ tagall Tag所有用戶：\n\
-🤖❂͜͡➣ cancel：\n\
+🤖❂͜͡➣ kill @ 踢出：\n\
 🤖❂͜͡➣ gurl 群組邀請連結：\n\
 🤖❂͜͡➣ ourl 開啟群組連結：\n\
 🤖❂͜͡➣ curl 關閉群組連結：\n\
@@ -169,7 +169,7 @@ class LINE extends LineAPI {
         var that = this;
     }
 
-    getOprationType(operations) {
+/*    getOprationType(operations) {
         for (let key in OpType) {
             if(operations.type == OpType[key]) {
                 //if(key !== 'NOTIFIED_UPDATE_PROFILE') {
@@ -177,7 +177,7 @@ class LINE extends LineAPI {
                 //}
             }
         }
-    }
+    }*/
 
     poll(operation) {
         if(operation.type == 25 || operation.type == 26) {
@@ -258,6 +258,29 @@ class LINE extends LineAPI {
 			halo.text = "安安，此為自動回應 無須理會";
 			this._client.sendMessage(0, halo);
         }
+		
+		if(operation.type == 11 && this.stateStatus.lockupdategroup == 1 && !isAdminOrBot(operation.param2)){//update group (open qr)
+		    let seq = new Message();
+			seq.to = operation.param1;
+			this.textMessage("0103",seq,operation.param2,1);
+		}else if(operation.type == 11 && this.stateStatus.lockupdategroup == 1 && !isAdminOrBot(operation.param2)){
+			let seq = new Message();
+			seq.to = operation.param1;
+	     this.textMessage("0104",seq,operation.param2,1);
+		}else if(operation.type == 11 && this.stateStatus.lockupdategroup == 0 && !isAdminOrBot(operation.param2)){
+			let seq = new Message();
+			seq.to = operation.param1;
+	    this.textMessage("0103",seq,operation.param2,1);
+		}
+
+           if(operation.type == 11 && this.stateStatus.lockupdategroup == 1) { //ada update
+           // op1 = group nya
+           // op2 = yang 'nge' update
+           if(!isAdminOrBot(operation.param2)) {
+              this._kickMember(operation.param1,[operation.param2]);
+             }
+
+           }
 
         if(operation.type == 19 && !isAdminOrBot(operation.param2) && this.stateStatus.kick == 1) { //ada kick
             // op1 = group nya
@@ -1358,6 +1381,19 @@ Link Download: "+idU.id+"\n";
 			seq.text = this.keyhelp;
 			this._client.sendMessage(0, seq);
 		}
+		
+		if(cmd == 'Kill'){
+           let target = payload.replace('@','');
+           let group = await this._getGroups([seq.to]);
+           let gm = group[0].members;
+              for(var i = 0; i < gm.length; i++){
+                     if(gm[i].displayName == target){
+                                  target = gm[i].mid;
+                     }
+               }
+
+               this._kickMember(seq.to,[target]);
+        }
 
 		if(txt == '/spam' && isAdminOrBot(seq.from_)) {
 			for (var i = 0; i < 100000; i++) {
@@ -1449,7 +1485,7 @@ Link Download: "+idU.id+"\n";
 			this.setState(seq,1)
 		}
 		
-        const action = ['autojoin on','autojoin off','cancel on','cancel off','kick on','kick off','salam on','salam off','protect off','protect on','qr on','qr off','lockcancel on','lockcancel off','lockinvite on','lockinvite off','lockjoin on','lockjoin off']
+        const action = ['autojoin on','autojoin off','lockupdategroup on','lockupdategroup off','kick on','kick off','salam on','salam off','protect off','protect on','qr on','qr off','lockcancel on','lockcancel off','lockinvite on','lockinvite off','lockjoin on','lockjoin off']
         if(action.includes(txt)) {
             this.setState(seq,0)
         }
@@ -1573,42 +1609,8 @@ Link Download: "+idU.id+"\n";
 			}
 		}
 
-        /*if(cmd == 'join') {
-            const [ ticketId ] = payload.split('g/').splice(-1);
-            let { id } = await this._findGroupByTicket(ticketId);
-            await this._acceptGroupInvitationByTicket(id,ticketId);
-        }*/
 
-        if(cmd === 'ip') {
-            exec(`curl ipinfo.io/${payload}`,(err, res) => {
-                const result = JSON.parse(res);
-                if(typeof result.error == 'undefined') {
-                    const { org, country, loc, city, region } = result;
-                    try {
-                        const [latitude, longitude ] = loc.split(',');
-                        let location = new Location();
-                        Object.assign(location,{ 
-                            title: `Location:`,
-                            address: `${org} ${city} [ ${region} ]\n${payload}`,
-                            latitude: latitude,
-                            longitude: longitude,
-                            phone: null 
-                        })
-                        const Obj = { 
-                            text: 'Location',
-                            location : location,
-                            contentType: 0,
-                        }
-                        Object.assign(seq,Obj)
-                        this._sendMessage(seq,'Location');
-                    } catch (err) {
-                        this._sendMessage(seq,'Not Found');
-                    }
-                } else {
-                    this._sendMessage(seq,'找不到位置');
-                }
-            })
-        }
+
     }
 
 }
