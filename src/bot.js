@@ -30,7 +30,7 @@ const auth = {
 	password: ''
 }
 
-let client =  new LineConnect(auth);
+let client =  new LineConnect();
 //let client =  new LineConnect(auth);
 
 client.startx().then(async (res) => {
