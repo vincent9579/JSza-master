@@ -169,7 +169,7 @@ class LINE extends LineAPI {
         var that = this;
     }
 
-/*    getOprationType(operations) {
+    getOprationType(operations) {
         for (let key in OpType) {
             if(operations.type == OpType[key]) {
                 //if(key !== 'NOTIFIED_UPDATE_PROFILE') {
@@ -177,7 +177,7 @@ class LINE extends LineAPI {
                 //}
             }
         }
-    }*/
+    }
 
     poll(operation) {
         if(operation.type == 25 || operation.type == 26) {

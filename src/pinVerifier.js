@@ -1,5 +1,3 @@
-const RSA = require('node-bignumber');
-
 class PinVerifier {
   constructor(id, password) {
     this.id = id;
